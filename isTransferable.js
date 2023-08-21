@@ -7,7 +7,6 @@ const {MessagePort} = require("worker_threads");
 module.exports = (data)=>
 {
 	return (
-		data instanceof Buffer ||
 		data instanceof ArrayBuffer ||
 		data instanceof MessagePort ||
 		(typeof data === "object" && data !== null && data.constructor.name === "ImageBitmap")
