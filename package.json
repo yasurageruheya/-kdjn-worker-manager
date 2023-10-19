@@ -1,20 +1,22 @@
 {
-	"name": "worker-manager",
-	"version": "1.0.0",
-	"description": "Workerを扱うライブラリをテスト的に作成",
-	"main": "WorkerManager.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/yasurageruheya/WorkerManager.git"
-	},
-	"keywords": [],
-	"author": "yasurageruheya <kdjn6223@gmail.com> (https://twitter.com/yasurageruheya)",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/yasurageruheya/WorkerManager/issues"
-	},
-	"homepage": "https://github.com/yasurageruheya/WorkerManager#readme"
+  "name": "worker-manager",
+  "version": "0.0.1",
+  "description": "Workerを扱うライブラリをテスト的に作成",
+  "main": "WorkerManager.js",
+  "bin": {
+    "worker-mamager": "WorkerManager.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yasurageruheya/WorkerManager.git"
+  },
+  "keywords": [],
+  "author": "毛 <j.kudo@aobiji.ac.jp> (https://twitter.com/yasurageruheya)",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
