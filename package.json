@@ -4,7 +4,7 @@
   "description": "Workerを扱うライブラリをテスト的に作成",
   "main": "WorkerManager.js",
   "bin": {
-    "worker-mamager": "WorkerManager.js"
+    "kdjn-worker-mamager": "WorkerManager.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
