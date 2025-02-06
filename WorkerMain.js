@@ -1,5 +1,7 @@
 const {Worker} = require("worker_threads");
 
+/** @type {typeof WorkerManager} */
+const WorkerManager = require("./WorkerManager");
 const MainMessenger = require("./MainMessenger");
 const _WorkerBase = require("./_WorkerBase");
 
@@ -79,6 +81,11 @@ class WorkerMain extends _WorkerBase
 			@param {any|TransferableObject} message*/
 		(message)=>
 		{
+			if(this._log)
+			{
+				console.log("WorkerMain:" + this.name + " << ", message);
+			}
+
 			switch (typeof message)
 			{
 				case "string":
@@ -95,6 +102,7 @@ class WorkerMain extends _WorkerBase
 					else objectMessage(message, this);
 					break;
 			}
+			//todo: WorkerSub からのエラーを受け取れるようにしたい！！！！
 			if(message !== "received")
 			{
 				worker.postMessage("received");
@@ -104,11 +112,11 @@ class WorkerMain extends _WorkerBase
 		worker.on("exit", ()=>
 		{
 			this.emit("exit");
-			onSubWorkerEnd(this);
+			this.isEnd = true;
 		});
 		worker.on("error", (error)=>
 		{
-			this.emit("error", error);
+			if(Object.keys(error).length) this.emit("error", error);
 		});
 		/** @type {MainMessenger} */
 		this.sendToSubWorker = new MainMessenger(this);
@@ -128,6 +136,9 @@ class WorkerMain extends _WorkerBase
 		this.isEnd = false;
 		this.sendToSubWorker.string("start", callback);
 	}
+
+	/** @return {boolean} */
+	get _log() { return WorkerManager.logOutput; }
 }
 
 /**
@@ -153,30 +164,16 @@ const stringMessage = (message, workerMain)=>
 	}
 	else if(message === "end")
 	{
-		onSubWorkerEnd(workerMain);
+		workerMain.isEnd = true;
 		workerMain.emit("end");
 	}
 	else if(message.indexOf("transferDataName:") === 0)
 	{
 		this._tempTransferDataName = message.split(":")[1];
 	}
-}
-/**
- *
- * @param {WorkerMain} workerMain
- */
-const onSubWorkerEnd = (workerMain)=>
-{
-	if(!workerMain.isEnd)
+	else if(message.indexOf("error:") === 0)
 	{
-		workerMain.isEnd = true;
-		/*
-		workerMain.worker.terminate().then(error =>
-		{
-			if(error) console.log("sub worker terminate error", error);
-		});
-		*/
-
+		workerMain.emit("error", message.split(":")[1]);
 	}
 }
 
@@ -189,14 +186,19 @@ const objectMessage = (message, workerMain)=>
 {
 	if(typeof message.end !== "undefined")
 	{
-		onSubWorkerEnd(workerMain);
+		workerMain.isEnd = true;
 		workerMain.emit("end", message.end);
 	}
 	else if(workerMain.willEnd)
 	{
 		workerMain.willEnd = false;
-		onSubWorkerEnd(workerMain);
+		workerMain.isEnd = true;
 		workerMain.emit("end", message);
+	}
+	else if(message.error !== undefined)
+	{
+		workerMain.isEnd = true;
+		workerMain.emit("error", message);
 	}
 	else
 	{

@@ -1,6 +1,6 @@
 {
   "name": "kdjn-worker-manager",
-  "version": "0.0.1",
+  "version": "0.1.14",
   "description": "Workerを扱うライブラリをテスト的に作成",
   "main": "WorkerManager.js",
   "bin": {
